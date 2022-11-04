@@ -1,18 +1,32 @@
 import os
-from fastapi import FastAPI,HTTPException,status
-from tag import Tag
+import json
 import requests
 import xmltodict
+from tag import Tag
 from bs4 import BeautifulSoup
-app = FastAPI(title="QuestionnaireAPI")
+from fastapi import FastAPI,HTTPException,status
+from fastapi.responses import RedirectResponse
 
+app = FastAPI(
+    title="QuestionnaireAPI",
+    version="0.2.0",
+    license_info={
+        "name":"Find me on linkedin",
+        "url":"https://www.linkedin.com/in/hasindu-sithmin-9a1a12209/"
+    },
+    description="## question and answer API for programmers."
+)
 
 @app.get('/')
-def root():
-    return 
+def redirect():
+    return RedirectResponse('/docs')
 
+@app.get("/tags")
+def find_tags():
+    with open('tag.json','r') as fp:
+        return json.load(fp)
 
-def fn(obj):
+def gen_dct(obj):
     return {
         "author":obj['author']['name'],
         "date":obj['updated'],
@@ -31,5 +45,5 @@ async def find_tag(tag:Tag):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail="Try again later")
     dct = xmltodict.parse(res.text)
     entries = dct['feed']['entry']
-    return [fn(entry) for entry in entries]
+    return [gen_dct(entry) for entry in entries]
 

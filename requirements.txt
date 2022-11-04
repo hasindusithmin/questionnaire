@@ -2,3 +2,4 @@ fastapi
 requests
 lxml
 beautifulsoup4
+xmltodict
