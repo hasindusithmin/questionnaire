@@ -6,6 +6,8 @@ from tag import Tag
 from bs4 import BeautifulSoup
 from fastapi import FastAPI,HTTPException,status
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(
     title="QuestionnaireAPI",
@@ -14,7 +16,15 @@ app = FastAPI(
         "name":"Find me on linkedin",
         "url":"https://www.linkedin.com/in/hasindu-sithmin-9a1a12209/"
     },
-    description="## question and answer API for programmers."
+    description="### question and answer API for programmers."
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get('/')
